@@ -1,6 +1,11 @@
 package cz.foresttech.forestredis.shared.adapter;
 
+import org.apache.commons.lang.NotImplementedException;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * ConfigurationAdapter interface which handles differences between BungeeCord and Spigot in configuration structure.
@@ -74,6 +79,50 @@ public interface IConfigurationAdapter {
      * @return list of strings from the configuration. Returns empty list if path is not available.
      */
     List<String> getStringList(String path);
+
+    /*----------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Gets the requested List of Maps by path.
+     * If the List does not exist, this will return an empty List.
+     * This method will attempt to cast any values into a Map if possible,
+     * but may miss any values out if they are not compatible.
+     * @param path Path in the configuration.
+     * @return Requested List of Maps
+     */
+    List<Map<?,?>> getMapList(String path);
+
+    /*----------------------------------------------------------------------------------------------------------*/
+
+    /**
+     * Utility method for processing command channels from the config into POJOs.
+     * @param receive if true, returns the list of receiving CommandChannels, otherwise the sending.
+     * NOTE: Sending channels are not implemented.
+     * @return a list containing channels. Returns empty list if commands are disabled.
+     */
+    default List<CommandChannel> getCommandChannels(boolean receive) {
+
+        String direction;
+        if(receive){
+            direction = "receive";
+        } else {
+            direction = "send";
+            throw new NotImplementedException("Sending commands are yet to be implemented");
+        }
+
+        if(!getBoolean("commands."+direction+".enabled", false))
+            return Collections.emptyList();
+
+        return getMapList("commands."+direction+".list")
+                .stream()
+                .filter(m->(Boolean) m.get("enabled"))
+                .map(m->new CommandChannel(
+                        (String) m.get("channel"),
+                        CommandChannel.AllowMode.valueOf(((String)m.get("allow")).toUpperCase()),
+                        (List<String>) m.get("list")
+                ))
+                .collect(Collectors.toList());
+    }
 
     /*----------------------------------------------------------------------------------------------------------*/
 

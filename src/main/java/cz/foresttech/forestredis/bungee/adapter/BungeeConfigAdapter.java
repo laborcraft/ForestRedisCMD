@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of {@link IConfigurationAdapter} for Bungee version
@@ -87,6 +88,10 @@ public class BungeeConfigAdapter implements IConfigurationAdapter {
     @Override
     public List<String> getStringList(String path) {
         return this.configuration.getStringList(path);
+    }
+
+    public List<Map<?,?>> getMapList(String path){
+        return (List<Map<?, ?>>) this.configuration.getList(path);
     }
 
 }

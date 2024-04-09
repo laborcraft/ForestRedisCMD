@@ -62,6 +62,11 @@ public class ForestRedisSpigot extends JavaPlugin implements IForestRedisPlugin 
         return spigotConfigAdapter;
     }
 
+    @Override
+    public void executeCmd(String cmd) {
+        Bukkit.getScheduler().runTask(this, ()->Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd));
+    }
+
     /**
      * Obtains the instance of the plugin
      *

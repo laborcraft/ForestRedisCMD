@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>ForestRedisAPI</artifactId>
+    <groupId>cz.foresttech</groupId>
+    <artifactId>ForestRedisCMD</artifactId>
     <version>1.1.0</version>
 
     <properties>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-            <version>4.3.2</version>
+            <version>5.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

@@ -1,5 +1,6 @@
 package cz.foresttech.forestredis.shared;
 
+import cz.foresttech.forestredis.shared.adapter.CommandChannel;
 import cz.foresttech.forestredis.shared.models.MessageTransferObject;
 import cz.foresttech.forestredis.shared.models.RedisConfiguration;
 import redis.clients.jedis.*;
@@ -409,6 +410,25 @@ public class RedisManager {
                 return;
             }
 
+            // Process as command if channel is a CommandChannel
+            try {
+                List<CommandChannel> commandChannels = RedisManager.this.plugin.getConfigAdapter().getCommandChannels(true);
+                CommandChannel commandChannel = commandChannels.stream().filter(c->c.channel.equals(channel)).findAny().orElse(null);
+                if(commandChannel != null){
+                    if(!commandChannel.isAllowed(message)){
+                        RedisManager.this.plugin.logger().warning("Blocked disallowed redis command: " + channel + " -> '" + message + "'");
+                        return;
+                    }
+                    RedisManager.this.plugin.logger().info("Redis command: " + channel + " -> '" + message + "'");
+                    RedisManager.this.plugin.executeCmd(message);
+                    return;
+                }
+            } catch (Exception e){
+                RedisManager.this.plugin.logger().severe(e.getMessage());
+                e.printStackTrace();
+            }
+
+            // Otherwise process normally
             MessageTransferObject messageTransferObject = MessageTransferObject.fromJson(message);
             if (messageTransferObject == null) {
                 RedisManager.this.plugin.logger().warning("Cannot retrieve message object sent to channel '" + channel + "'! Message: '" + message + "'");

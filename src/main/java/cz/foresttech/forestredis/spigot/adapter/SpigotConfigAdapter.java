@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of {@link IConfigurationAdapter} for Spigot version
@@ -85,6 +86,11 @@ public class SpigotConfigAdapter implements IConfigurationAdapter {
     @Override
     public List<String> getStringList(String path) {
         return this.configuration.getStringList(path);
+    }
+
+    @Override
+    public List<Map<?, ?>> getMapList(String path) {
+        return this.configuration.getMapList(path);
     }
 
 }

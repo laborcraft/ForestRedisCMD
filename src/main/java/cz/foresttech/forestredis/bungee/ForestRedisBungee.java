@@ -4,11 +4,13 @@ import cz.foresttech.forestredis.bungee.commands.BungeeForestRedisCommand;
 import cz.foresttech.forestredis.bungee.adapter.BungeeConfigAdapter;
 import cz.foresttech.forestredis.bungee.events.RedisMessageReceivedEvent;
 import cz.foresttech.forestredis.shared.*;
+import cz.foresttech.forestredis.shared.adapter.CommandChannel;
 import cz.foresttech.forestredis.shared.adapter.IConfigurationAdapter;
 import cz.foresttech.forestredis.shared.models.MessageTransferObject;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -55,6 +57,12 @@ public class ForestRedisBungee extends Plugin implements IForestRedisPlugin {
         BungeeConfigAdapter bungeeConfigAdapter = new BungeeConfigAdapter(this);
         bungeeConfigAdapter.setup("config");
         return bungeeConfigAdapter;
+    }
+
+    @Override
+    public void executeCmd(String cmd) {
+        ProxyServer proxyServer = getProxy();
+        proxyServer.getPluginManager().dispatchCommand(proxyServer.getConsole(), cmd);
     }
 
     /**
