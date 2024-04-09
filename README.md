@@ -3,7 +3,7 @@
 **[ForestRedisAPI JavaDoc 1.0.7](https://foresttechmc.github.io/ForestRedisAPI/1.0.7/)**
 
 This fork of ForestRedisAPI adds a configuration section and a listener to commands sent as plain text on selected redis channels.
-Whitelists and blacklists can be selected for
+Whitelists and blacklists can be selected for these commands in order to improve security.
 This fork will track ForestRedisAPI for every other purpose.
 
 ### Usage
