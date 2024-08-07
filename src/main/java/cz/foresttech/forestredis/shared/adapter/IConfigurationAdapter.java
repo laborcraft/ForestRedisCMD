@@ -107,7 +107,6 @@ public interface IConfigurationAdapter {
             direction = "receive";
         } else {
             direction = "send";
-            throw new NotImplementedException("Sending commands are yet to be implemented");
         }
 
         if(!getBoolean("commands."+direction+".enabled", false))

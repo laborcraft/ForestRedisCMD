@@ -15,22 +15,21 @@ channels:
   - bkpcommands
   - my_channel
 
-# This section is used to process commands from selected redis channels.
+# This section is used to process commands to and from selected redis channels.
 commands:
 
-  # Only command reception is supported
   receive:
     enabled: false
     list:
       - enabled: true
-        # You'll also  need to add this channel to the subscribed channels above
+        # You'll also need to add this channel to the subscribed channels above
         channel: bkpcommands
         # Available modes:
         # ALL
         # WHITELIST_HARD - check command and arguments
         # WHITELIST_SOFT - only check command, not arguments
         # BLACKLIST_HARD - check command and arguments
-        # BLACKLIST_SOFT - nly check command, not arguments
+        # BLACKLIST_SOFT - Only check command, not arguments
         allow: WHITELIST_SOFT
         list:
           - say
@@ -42,3 +41,13 @@ commands:
         channel: other_commands
         allow: ALL
         list: []
+
+  send:
+    enabled: false
+    whitelist:
+      - enabled: false
+        # You WON'T need to add this channel to the subscribed channels above
+        channel: hubcmd
+        allow: WHITELIST_SOFT
+        list:
+          - hub

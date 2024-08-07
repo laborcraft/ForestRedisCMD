@@ -416,10 +416,10 @@ public class RedisManager {
                 CommandChannel commandChannel = commandChannels.stream().filter(c->c.channel.equals(channel)).findAny().orElse(null);
                 if(commandChannel != null){
                     if(!commandChannel.isAllowed(message)){
-                        RedisManager.this.plugin.logger().warning("Blocked disallowed redis command: " + channel + " -> '" + message + "'");
+                        RedisManager.this.plugin.logger().warning("[RX] Blocked disallowed redis command: " + channel + " -> '" + message + "'");
                         return;
                     }
-                    RedisManager.this.plugin.logger().info("Redis command: " + channel + " -> '" + message + "'");
+                    RedisManager.this.plugin.logger().info("[RX] Redis command: " + channel + " -> '" + message + "'");
                     RedisManager.this.plugin.executeCmd(message);
                     return;
                 }
