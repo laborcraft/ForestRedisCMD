@@ -431,7 +431,7 @@ public class RedisManager {
             // Otherwise process normally
             MessageTransferObject messageTransferObject = MessageTransferObject.fromJson(message);
             if (messageTransferObject == null) {
-                RedisManager.this.plugin.logger().warning("Cannot retrieve message object sent to channel '" + channel + "'! Message: '" + message + "'");
+                RedisManager.this.plugin.logger().warning("Cannot retrieve message object sent to channel '" + channel + "'! Message: '" + message + "'. If this is a command, configuration is incorrect.");
                 return;
             }
 
