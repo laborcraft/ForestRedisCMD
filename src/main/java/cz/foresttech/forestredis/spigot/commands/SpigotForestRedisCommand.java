@@ -1,5 +1,6 @@
 package cz.foresttech.forestredis.spigot.commands;
 
+import cz.foresttech.forestredis.bungee.ForestRedisBungee;
 import cz.foresttech.forestredis.shared.RedisManager;
 import cz.foresttech.forestredis.shared.adapter.CommandChannel;
 import cz.foresttech.forestredis.spigot.ForestRedisSpigot;
@@ -7,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +50,13 @@ public class SpigotForestRedisCommand implements CommandExecutor {
                         return true;
                     }
                     ForestRedisSpigot.getInstance().logger().info("[TX] Redis command: " + args[1] + " -> '" + cmd + "'");
-                    RedisManager.getAPI().getJedis().publish(args[1], cmd);
+                    ForestRedisSpigot.getInstance().runAsync(() -> {
+                        try (Jedis jedis = RedisManager.getAPI().getJedis()) {
+                            jedis.publish(args[1], cmd);
+                        } catch (Exception e) {
+                            ForestRedisSpigot.getInstance().logger().warning("Could not send message to the Redis server!");
+                        }
+                    });
                 } else {
                     commandSender.sendMessage("§2["+ForestRedisSpigot.getInstance().getDescription().getName()+"] §7Channel '"+args[1]+"' is not whitelisted for sending commands!");
                 }

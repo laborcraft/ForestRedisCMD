@@ -6,6 +6,7 @@ import cz.foresttech.forestredis.shared.adapter.CommandChannel;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import redis.clients.jedis.Jedis;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,13 @@ public class BungeeForestRedisCommand extends Command {
                         return;
                     }
                     ForestRedisBungee.getInstance().logger().info("[TX] Redis command: " + args[1] + " -> '" + cmd + "'");
-                    RedisManager.getAPI().getJedis().publish(args[1], cmd);
+                    ForestRedisBungee.getInstance().runAsync(() -> {
+                        try (Jedis jedis = RedisManager.getAPI().getJedis()) {
+                            jedis.publish(args[1], cmd);
+                        } catch (Exception e) {
+                            ForestRedisBungee.getInstance().logger().warning("Could not send message to the Redis server!");
+                        }
+                    });
                 } else {
                     commandSender.sendMessage("§2["+ForestRedisBungee.getInstance().getDescription().getName()+"] §7Channel '"+args[1]+"' is not whitelisted for sending commands!");
                 }
